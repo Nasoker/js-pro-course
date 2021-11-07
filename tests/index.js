@@ -14,7 +14,9 @@ const handleChange = () => {
     firstOutput.innerText = x;
     secondOutput.innerText = y;
     thirdOutput.innerText = z;
-    quadraticEquation(x, y, z);
+    const arrayOfRoots = quadraticEquation(x, y, z);
+    firstRootOutput.innerText = arrayOfRoots[0];
+    secondRootOutput.innerText = arrayOfRoots[1];
 };
 
 firstNumber.addEventListener("change", handleChange);
