@@ -1,25 +1,21 @@
 /* First Task */
-const string = "AaBaaaai";
-const set = new Set();
+ const string = "AaBaaaai";
 const arrayFromString = string.toLowerCase().split('');
 const arrayOfVowels = ['a', 'e', 'i', 'o', 'u'];
-arrayFromString.forEach((arr) => {
-    set.add(arr);
-});
+const set = new Set(arrayFromString)
 const arrayWithUniqueLetters = [...set];
 const returnedArray = [];
 
-for (let i = 0; i < arrayWithUniqueLetters.length; i++) {
-    if (arrayOfVowels[i] === arrayWithUniqueLetters[i]) {
-        returnedArray.push(arrayOfVowels[i])
+const result = arrayWithUniqueLetters.filter(letter => {
+    if (arrayOfVowels.includes(letter)) {
+        returnedArray.push(letter)
     }
-}
-
-console.log(returnedArray)
+});
+console.log(returnedArray) 
 
 /* Second Task */
 
-const messages = [
+ const messages = [
     { text: "Hello", from: "John" },
     { text: "How goes?", from: "John" },
     { text: "See you soon", from: "Alice" }
@@ -48,6 +44,43 @@ function getTimeOfMessage(message) {
 
 
 /* Third Task */
+const defaultHashFunc = (value) => value.toString();
+
+class HashTable {
+    constructor(hashFunction) {
+        this.hashFunction = hashFunction || defaultHashFunc;
+        this.storage = {};
+    }
+
+    add = (value) => {
+        let hash = this.hashFunction(value);
+        if (this.storage[hash] === undefined) {
+            this.storage[hash] = [value];
+        } else {
+            this.storage[hash].push(value);
+        }
+    }
+
+    remove = (value) => {
+        let hash = this.hashFunction(value);
+        if (!this.storage[hash]) {
+            return;
+        } else if (this.storage[hash].length === 1) {
+            delete this.storage[hash];
+        } else {
+            for (let i = 0; i < this.storage[hash].length; i++) {
+                if (this.storage[hash][i][0] === value) {
+                    return delete this.storage[hash][i];
+                }
+            }
+        }
+    }
+
+    lookup = (value) => {
+        let hash = this.hashFunction(value);
+        return this.storage[hash] || [];
+    }
+}
 
 const input = ["tom", "xyz", "mot", "xel", "zXy", "yxz"];
 let arrayOfWords = [];
@@ -55,3 +88,14 @@ let arrayOfWords = [];
 input.forEach((inputWord) => {
     arrayOfWords.push(inputWord.toLowerCase().split('').sort().join(''));
 });
+
+const setOfWords = new Set(arrayOfWords);
+const keys = [...setOfWords]; /* tom, xyz, xel */
+const hashTable = new HashTable();
+const result = arrayOfWords.filter(word => {
+    if (keys.includes(word)) {
+        let index = arrayOfWords.indexOf(word);
+        hashTable.add(input[index]);
+    }
+});
+console.log(hashTable)
