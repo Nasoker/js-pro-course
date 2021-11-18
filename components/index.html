@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+</head>
+
+<body>
+    <script>
+        customElements.define('tree-menu', class extends HTMLElement {
+            connectedCallback() {
+                const tmpl = document.getElementById("tmpl__tree-menu");
+                this.attachShadow({
+                    mode: "open"
+                });
+                this.shadowRoot.append(tmpl.content.cloneNode(true));
+                this.select();
+                this.isItem();
+            }
+
+            disconnectedCallback() {
+                this.removeSelect();
+            }
+
+            select = () => {
+                const slotTitle = this.shadowRoot.querySelector('slot[name="title"]');
+                slotTitle.addEventListener('click', this.showItem);
+            }
+
+            removeSelect = () => {
+                const slotTitle = this.shadowRoot.querySelector('slot[name="title"]');
+                slotTitle.removeEventListener('click', this.showItem);
+            }
+
+            showItem = () => {
+                const slotItem = this.shadowRoot.querySelector('slot[name="item"]');
+                slotItem.style.display === 'none' ? slotItem.style.display = 'block' : slotItem.style.display = 'none';
+            }
+            isItem = () => {
+                const attribute = this.getAttribute('slot');
+                const ul = this.shadowRoot.querySelector('ul');
+                if (attribute === 'item') {
+                    ul.listStyleType = 'square';
+                }
+            }
+        });
+    </script>
+    <template id='tmpl__tree-menu'>
+        <style>
+            slot[name='title'],
+            slot[name='item']{
+                cursor:pointer;
+            }
+            slot[name='title']:hover
+            slot[name='item']:hover{
+                font-weight: bold;
+            }
+            slot[name='item']{
+                display:none;
+            }
+        </style>
+        <slot name='title'></slot>
+        <ul>
+            <slot name='item'></slot>
+        </ul>
+    </template>
+
+    <tree-menu id="menu">
+        <span slot="title">Царства живых организмов</span>
+        <tree-menu slot="item">
+            <span slot="title">Бактерии</span>
+            <li slot="item">Эндоспоры</li>
+        </tree-menu>
+        <tree-menu slot="item">
+            <span slot="title">Простейшие</span>
+            <li slot="item">Жгутиковые</li>
+            <li slot="item">Корненожки</li>
+            <li slot="item">Споровики</li>
+            <li slot="item">Инфузории</li>
+            <li slot="item">Солнечники</li>
+            <li slot="item">Радиолярии</li>
+        </tree-menu>
+    </tree-menu>
+
+</body>
+
+</html>
