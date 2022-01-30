@@ -1,0 +1,43 @@
+.condition-tomorrow{
+    width:46px;
+    height: 46px;
+    margin-right:10px;
+}
+
+.degrees-day{
+    font-weight: 700;
+    font-size: 20px;
+    color:white;
+    display: flex;
+    align-items: center;
+    &-min{
+        font-weight: 700;
+        font-size: 20px;
+        color: #687B92;
+    }
+}
+
+.weekday{
+    font-size: 20px;
+    color: #687B92;
+    font-weight: 500;
+}
+
+.weather-day{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: #687B92;
+    font-weight: 500;
+}
+
+.card-day-info{
+    min-width: 1440px;
+    padding:10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+/*     border: 1px solid #272727;
+    border-radius: 27px; */
+    margin-bottom:4px;
+}

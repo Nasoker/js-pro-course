@@ -1,0 +1,28 @@
+.footer{
+    padding-top:10px;
+}
+
+.footer-info{
+    padding:0 15px;
+}
+
+.footer-days-cards{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: auto;
+    max-width: 1440px;
+}
+
+.title{
+    color:white;
+    font-size: 23px;
+    font-weight: 700;
+    margin-bottom:35px;
+}
+
+.footer-link{
+    font-size: 17px;
+    color: #687B92;
+}

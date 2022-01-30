@@ -1,0 +1,23 @@
+.header{
+    padding-top:34px;
+    display:flex;
+    justify-content: space-between;
+    width:75%;
+    position: absolute;
+    top:0%;
+    left:13%;
+    z-index: 15;
+}
+
+.city{
+    color: #FFFFFF;
+    font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100px;
+}
+
+svg{
+    color:white;
+}

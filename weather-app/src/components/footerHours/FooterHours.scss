@@ -1,0 +1,30 @@
+.footer{
+    padding-top:10px;
+}
+
+.footer-cards{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: auto;
+    max-width: 1440px;
+}
+
+.footer-info{
+    max-width:1440px;
+    display: flex;
+    margin: auto;
+    justify-content: space-between;
+}
+
+.title{
+    color:white;
+    font-size: 23px;
+    font-weight: 700;
+    margin-bottom:35px;
+}
+
+.footer-link{
+    font-size: 17px;
+    color: #687B92;
+}
