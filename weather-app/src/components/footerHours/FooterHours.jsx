@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"
 import './FooterHours.scss';
-import { getWeather } from "../../api/weatherApi";
+import Loader from '../loader/Loader'
 import { FooterCard } from "./footerCard/FooterCard";
 import { getHours } from "../../helpers/Time";
-import { NavLink } from "react-router-dom";
+import { fetchWeather } from '../../store/weather/actions'
+import { FAILED, LOADING } from "../../constants/statusses";
 
 export function FooterHours () {
-    const [weather, setWeather] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-    
+    const dispatch = useDispatch(); 
+    const city = useSelector(state => state.weather.city);
+    const weather = useSelector(state => state.weather.weatherObj);
+    const weatherStatus = useSelector(state => state.weather.fetchWeatherStatus);
+
+    const isLoading = weatherStatus === LOADING;
+    const isError = weatherStatus === FAILED;
 
     useEffect(() => {
-        async function fetchData () {
-            try {
-                const response = await getWeather();
-                setWeather(response.data);
-            } catch {
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        fetchData();
-    }, []);
+        dispatch(fetchWeather());
+    }, [city]);
 
     const showOnlyFutureHours = () => {
         const day = weather.days[0].hours;
@@ -39,24 +34,30 @@ export function FooterHours () {
 
     return(
         <>
-        <div className="footer">
+        {isLoading && <Loader/>}
+        {isError &&
+                <span className="text">
+                    You made a mistake in introducing a city or there is no such city!
+                </span>
+            }
+        {!isLoading && !isError && !!weather &&
+         <div className="footer">
             <div className="footer-info">
                 <div className="title">Today</div>
-                <NavLink to={"/7days"}><a className="footer-link">7 days  </a></NavLink>
+                <NavLink to={"/7days"}><span className="footer-link">7 days  </span></NavLink>
             </div>
             <div className="footer-cards">
-            {isLoading && "Loading..."}
-            {isError && "isError..."}
-            {!isLoading && !isError && weather.days[0].hours.map(hour => {
-                const futureHours = showOnlyFutureHours();
-                const apiHour = hour.datetime.substring(0,2);
-                if (futureHours.includes(apiHour)){
-                    return <FooterCard key={apiHour} hour={hour}/>
-                }
+                {weather.days[0].hours.map(hour => {
+                    const futureHours = showOnlyFutureHours();
+                    const apiHour = hour.datetime.substring(0,2);
+                    if (futureHours.includes(apiHour)){
+                        return <FooterCard key={apiHour} hour={hour}/>
+                    }
             })
             } 
-            </div>           
+            </div>     
         </div>
-        </>
+        }
+    </>
     )
 }

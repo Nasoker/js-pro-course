@@ -1,40 +1,38 @@
-import React, {useState, useEffect } from "react";
+import React, {useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux"
 import './TomorrowContent.scss';
-import { getWeather } from "../../api/weatherApi";
 import Loader from '../loader/Loader'
+import { fetchWeather } from '../../store/weather/actions'
+import { FAILED, LOADING } from "../../constants/statusses";
 
 export function TomorrowContent () {
-    const [weather, setWeather] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-    
-    useEffect(() => {
-        async function fetchData () {
-            try {
-                const response = await getWeather();
-                setWeather(response.data);
-            } catch {
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        }
+    const dispatch = useDispatch(); 
+    const city = useSelector(state => state.weather.city);
+    const weather = useSelector(state => state.weather.weatherObj);
+    const weatherStatus = useSelector(state => state.weather.fetchWeatherStatus);
 
-        fetchData();
-    }, []);
+    const isLoading = weatherStatus === LOADING;
+    const isError = weatherStatus === FAILED;
+
+    useEffect(() => {
+        dispatch(fetchWeather());
+    }, [city]);
 
     return(
         <>
         {isLoading && <Loader/>}
-        {isError && "isError..."}
-        {!isLoading && !isError && 
-        <div className="main">
+        {isError &&
+                <span className="text">
+                    You made a mistake in introducing a city or there is no such city!
+                </span>
+            }
+        {!isLoading && !isError && <div className="main">
             <div className="tomorrow-content">
                 <div className="tomorrow-info">
                     <img src={`./assets/weather-img/${weather.days[1].conditions}.png`} alt="" className="tomorrow-photo" />
                     <div className="about-weather">
                         <div className='date'>Tomorrow</div>
-                        <div className="degrees">{Math.round(weather.days[1].tempmax)}<span className="degrees-min">/{Math.round(weather.days[0].tempmin)}⁰</span></div>
+                        <div className="degrees">{Math.round(weather.days[1].tempmax)}⁰<span className="degrees-min">/{Math.round(weather.days[0].tempmin)}⁰</span></div>
                         <div className="weather">{weather.days[1].conditions}</div> 
                     </div>
                 </div>
@@ -56,7 +54,8 @@ export function TomorrowContent () {
                         </div> 
                 </div>
             </div>
-        </div>}
-        </>
+        </div> 
+        }
+     </>
     )
 }

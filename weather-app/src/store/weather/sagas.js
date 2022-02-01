@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, take, fork, takeLeading, spawn, select } from "redux-saga/effects";
+import { all, call, put, takeEvery,select} from "redux-saga/effects";
 import { getWeather } from "../../api/weatherApi";
 import { FETCH_WEATHER, setFetchWeatherStatus, setWeather } from "./actions";
 import { FAILED, LOADING, SUCCESS } from "../../constants/statusses";
@@ -10,8 +10,8 @@ function* fetchWeatherWatcher() {
 function* fetchWeatherWorker(action) {
     try {
         yield put(setFetchWeatherStatus(LOADING));
-
-        const response = yield call(getWeather);
+        const city = yield select ((state => state.weather.city));
+        const response = yield call(getWeather,city);
 
         yield put(setWeather(response.data));
         yield put(setFetchWeatherStatus(SUCCESS));

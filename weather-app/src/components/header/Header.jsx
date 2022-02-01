@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux"
 import { NavLink } from "react-router-dom";
-import Loader from "../loader/Loader";
-import { Modal,Box,Typography,IconButton,Button,TextField } from "@mui/material";
+import { IconButton,Button,Modal,Box,Typography,TextField } from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { setCity } from '../../store/weather/actions'
 import './Header.scss'
 
 const style = {
@@ -17,33 +18,37 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-    display: 'flex',
-    justifyContent:'space-between',
   };
 
 export function Header () {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        if(inputValue){
+            localStorage.setItem('city',JSON.stringify(inputValue));
+            dispatch(setCity(inputValue));
+            setOpen(false);
+            setInputValue('');
+        }else{
+            alert('WARNING! You have an EMPTY field ')
+        }
+    }
     const handleOpen = () => setOpen(true);
-    console.log(inputValue)
+
+    const city = useSelector(state => state.weather.city)
 
     return(
         <div className="header">
             <NavLink to={"/"}><IconButton aria-label="home"><HomeIcon/></IconButton></NavLink>
-            <Button onClick={handleOpen} startIcon={<LocationOnIcon />}>{ <Loader/>  }</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
+            <Button onClick={handleOpen} startIcon={<LocationOnIcon />}>{city}</Button>
+            <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
-                    <TextField id="outlined-basic" label="City" variant="outlined" onInput={e => setInputValue(e.target.value)} value={inputValue}/>
-                    <Button onClick={()=>{
-                        handleClose();
-                        }
-                        }>Submit</Button>
+                    <Typography>Please enter the city.</Typography>
+                    <div className="flexed">
+                        <TextField id="outlined-basic" label="City" variant="outlined" onInput={e => setInputValue(e.target.value)} value={inputValue}/>
+                        <Button onClick={handleClose}>Submit</Button>
+                    </div>
                 </Box>
             </Modal>
             <IconButton aria-label="registration"><LockOpenIcon/></IconButton>
